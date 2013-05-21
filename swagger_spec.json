@@ -1,0 +1,694 @@
+{
+  "apiVersion": "0.1.0",
+  "swaggerVersion": "1.1",
+  "basePath": "/api/",
+  "resourcePath": "cdnManager",
+  "apis": [{
+    "path": "/buckets",
+    "operations": [{
+      "httpMethod": "GET",
+      "nickname": "getBucketsSummaries",
+      "responseClass": "Buckets",
+      "errorResponses": [{
+        "code": 404,
+        "reason": "No buckets found"
+      }, {
+        "code": 400,
+        "reason": "Bad Request: Can't have the same property in both sortByAsc and sortByDesc"
+      }],
+      "notes": "Fetch all buckets which match the query parameters.",
+      "parameters": [{
+        "paramType": "query",
+        "name": "named",
+        "description": "Comma separated string which matches the start of a bucket name. Limits the results of the call to buckets which match.",
+        "dataType": "String",
+        "required": false,
+        "allowMultiple": true
+      }, {
+        "paramType": "query",
+        "name": "ownedBy",
+        "dataType": "String",
+        "description": "Comma seperated string which matches the start of the owner name of the bucket. Limits the results to the buckets which match.",
+        "required": false,
+        "allowMultiple": true
+      }, {
+        "paramType": "query",
+        "name": "sortByAsc",
+        "description": "Comma seperated string which sorts the bucket in asending order by the propery value.",
+        "dataType": "String",
+        "allowableValues": {
+          "values": [
+            "name",
+            "ownerName",
+            "created"
+          ]
+        },
+        "required": false,
+        "allowMultiple": true
+      }, {
+        "paramType": "query",
+        "name": "sortByDesc",
+        "description": "Comma seperated string which sorts the bucket in descending order by the propery value.",
+        "dataType": "String",
+        "allowableValues": {
+          "values": [
+            "name",
+            "ownerName",
+            "created"
+          ]
+        },
+        "required": false,
+        "allowMultiple": true
+      }]
+    }]
+  }, {
+    "path": "/buckets",
+    "description": "Create a new bucket",
+    "operations": [{
+      "httpMethod": "POST",
+      "nickname": "putBucket",
+      "notes": "Create a new Bucket",
+      "responseClass": "Bucket",
+      "parameters": [{
+        "name": "bucket",
+        "paramType": "body",
+        "dataType": "EditBucket",
+        "description": "The bucket to update on the server"
+      }],
+      "errorResponses": [{
+        "code": 409,
+        "reason": "Bucket Name in conflict with an existing bucket"
+      }, {
+        "code": 410,
+        "reason": "Owner does not exist"
+      }, {
+        "code": 400,
+        "reason": "Bad Permission in Access Control Rule"
+      }, {
+        "code": 410,
+        "reason": "Content does not exist"
+      }]
+    }]
+  }, {
+    "path": "/buckets/{bucketName}",
+    "description": "",
+    "operations": [{
+      "httpMethod": "GET",
+      "nickname": "getBucketByName",
+      "notes": "Get a single bucket by name. This must be an exact match of the bucket name.",
+      "responseClass": "Bucket",
+      "parameters": [{
+        "name": "bucketName",
+        "paramType": "path",
+        "dataType": "String",
+        "description": "The name of the bucket to get.",
+        "required": true
+      }]
+    }, {
+      "httpMethod": "DELETE",
+      "nickname": "putBucket",
+      "notes": "Remove a single bucket by name. This must be an exact match of the bucket name.",
+      "responseClass": "Boolean",
+      "parameters": [{
+        "name": "bucketName",
+        "paramType": "path",
+        "dataType": "String",
+        "description": "The name of the bucket to delete on the server",
+        "required": true
+      }, {
+        "name": "shouldRemoveAllContent",
+        "paramType": "query",
+        "dataType": "Boolean",
+        "description": "Force Delete even if bucket still has content."
+      }]
+    }, {
+      "httpMethod": "PUT",
+      "nickname": "updateBucket",
+      "notes": "Update a single bucket by name. This must be an exact match of the bucket name.",
+      "responseClass": "Bucket",
+      "parameters": [{
+        "name": "bucketName",
+        "paramType": "path",
+        "dataType": "String",
+        "description": "The name of the bucket to update on the server",
+        "required": true
+      }, {
+        "name": "bucket",
+        "paramType": "body",
+        "dataType": "EditBucket",
+        "description": "The bucket to update on the server"
+      }],
+      "errorResponses": [{
+        "code": 409,
+        "reason": "Bucket Name in conflict with an existing bucket"
+      }, {
+        "code": 410,
+        "reason": "Owner does not exist"
+      }, {
+        "code": 400,
+        "reason": "Bad Permission in ACL"
+      }, {
+        "code": 410,
+        "reason": "Content does not exist"
+      }]
+    }]
+  }, {
+    "path": "/owners",
+    "description": "",
+    "operations": [{
+      "httpMethod": "GET",
+      "nickname": "getOwnerSummaries",
+      "responseClass": "Owners",
+      "notes": "",
+      "parameters": [{
+        "name": "named",
+        "paramType": "query",
+        "dataType": "String",
+        "required": false,
+        "allowMultiple": true
+      }, {
+        "name": "sortAsc",
+        "paramType": "query",
+        "dataType": "Boolean",
+        "required": false,
+        "allowMultiple": true
+      }]
+    }]
+  }, {
+    "path": "/owners",
+    "description": "",
+    "operations": [{
+      "httpMethod": "POST",
+      "nickname": "createOwner",
+      "responseClass": "Owner",
+      "parameters": [{
+        "name": "owner",
+        "paramType": "body",
+        "dataType": "Owner",
+        "required": true
+      }],
+      "errorResponses": [{
+        "code": 409,
+        "reason": "New Owner Name in conflict with an existing Owner"
+      }]
+    }]
+  }, {
+    "path": "/owners/{ownerName}",
+    "description": "",
+    "operations": [{
+      "httpMethod": "GET",
+      "nickname": "getOwnerByName",
+      "responseClass": "Owner",
+      "parameters": [{
+        "name": "ownerName",
+        "paramType": "path",
+        "dataType": "String",
+        "required": true
+      }]
+    }, {
+      "httpMethod": "DELETE",
+      "nickname": "deleteOwnerByName",
+      "responseClass": "Boolean",
+      "parameters": [{
+        "name": "ownerName",
+        "paramType": "path",
+        "dataType": "String",
+        "required": true
+      }],
+      "errorResponses": [{
+        "code": 500,
+        "reason": "Owner's can't be removed if they still own any buckets."
+      }]
+    }, {
+      "httpMethod": "PUT",
+      "nickname": "updateOwnerByName",
+      "responseClass": "Owner",
+      "parameters": [{
+        "name": "ownerName",
+        "paramType": "path",
+        "dataType": "String",
+        "required": true
+      }, {
+        "name": "owner",
+        "paramType": "body",
+        "dataType": "Owner",
+        "required": true
+      }],
+      "errorResponses": [{
+        "code": 409,
+        "reason": "New Owner Name in conflict with an existing Owner"
+      }]
+    }]
+  }, {
+    "path": "/buckets/{bucketName}/contents",
+    "description": "",
+    "operations": [{
+      "httpMethod": "GET",
+      "nickname": "getBucketsContents",
+      "responseClass": "Contents",
+      "errorResponses": [{
+        "code": 404,
+        "reason": "No content found"
+      }, {
+        "code": 400,
+        "reason": "Bad Request: Can't have the same property in both sortByAsc and sortByDesc"
+      }],
+      "parameters": [{
+        "paramType": "path",
+        "name": "bucketName",
+        "description": "",
+        "dataType": "String",
+        "required": true
+      }, {
+        "paramType": "query",
+        "name": "named",
+        "description": "Comma separated string which matches the start of a content name. Limits the results of the call to content which match.",
+        "dataType": "String",
+        "required": false,
+        "allowMultiple": true
+      }, {
+        "paramType": "query",
+        "name": "contentDispositioned",
+        "dataType": "String",
+        "description": "Comma seperated string which matches the start of the owner name of the content. Limits the results to the content which match.",
+        "required": false,
+        "allowMultiple": true
+      }, {
+        "paramType": "query",
+        "name": "contentTyped",
+        "dataType": "String",
+        "description": "Comma seperated string which matches the start of the owner name of the content. Limits the results to the content which match.",
+        "required": false,
+        "allowMultiple": true
+      }, {
+        "paramType": "query",
+        "name": "contentExpired",
+        "dataType": "String",
+        "description": "Comma seperated string which matches the start of the owner name of the content. Limits the results to the content which match.",
+        "required": false,
+        "allowMultiple": true
+      }, {
+        "paramType": "query",
+        "name": "redirectLocation",
+        "dataType": "String",
+        "description": "Comma seperated string which matches the start of the owner name of the content. Limits the results to the content which match.",
+        "required": false,
+        "allowMultiple": true
+      }, {
+        "paramType": "query",
+        "name": "sortByAsc",
+        "description": "Comma seperated string which sorts the content in asending order by the propery value.",
+        "dataType": "String",
+        "allowableValues": {
+          "values": [
+            "name",
+            "cacheControl",
+            "contentDisposition",
+            "contentLength",
+            "contentType",
+            "contentExpires",
+            "redirectLocation",
+            "md5sum"
+          ]
+        },
+        "required": false,
+        "allowMultiple": true
+      }, {
+        "paramType": "query",
+        "name": "sortByDesc",
+        "description": "Comma separated string which sorts the content in descending order by the propery value.",
+        "dataType": "String",
+        "allowableValues": {
+          "values": [
+            "name",
+            "ownerName",
+            "created"
+          ]
+        },
+        "required": false,
+        "allowMultiple": true
+      }]
+    }]
+  }, {
+    "path": "/buckets/{bucketname}/content",
+    "description": "",
+    "operations": [{
+      "httpMethod": "POST",
+      "nickname": "cerateBucketContent",
+      "responseClass": "Content",
+      "parameters": [{
+        "paramType": "body",
+        "name": "content",
+        "dataType": "Content"
+      }, {
+        "paramType": "query",
+        "name": "processor",
+        "dataType": "string"
+      }],
+      "errorResponses": [{
+        "code": 409,
+        "reason": "New content Name in conflict with an existing content item in bucket"
+      }, {
+        "code": 409,
+        "reason": "New content's md5 is identical to another resource"
+      }, {
+        "code": 415,
+        "reason": "The CDN server doesn't understand the supplied content type."
+      }, {
+        "code": 413,
+        "reason": "Content items must be under 4MB."
+      }]
+    }]
+  }, {
+    "path": "/buckets/{bucketname}/content/{contentName}",
+    "description": "",
+    "operations": [{
+      "httpMethod": "GET",
+      "nickname": "getBucketContentByName",
+      "responseClass": "Content",
+      "parameters": [{
+        "paramType": "path",
+        "name": "contentName",
+        "dataType": "String"
+      }]
+    }, {
+      "httpMethod": "DELETE",
+      "nickname": "deleteBucketContentByName",
+      "responseClass": "Boolean",
+      "parameters": [{
+        "paramType": "path",
+        "name": "contentName",
+        "dataType": "String"
+      }]
+    }, {
+      "httpMethod": "PUT",
+      "nickname": "updateBucketContentByName",
+      "responseClass": "Content",
+      "parameters": [{
+        "paramType": "path",
+        "name": "contentName",
+        "dataType": "string"
+      }, {
+        "paramType": "body",
+        "name": "content",
+        "dataType": "Content"
+      }, {
+        "paramType": "query",
+        "name": "processor",
+        "dataType": "string"
+      }],
+      "errorResponses": [{
+        "code": 409,
+        "reason": "New content Name in conflict with an existing content item in bucket"
+      }, {
+        "code": 409,
+        "reason": "New content's md5 is identical to another resource"
+      }, {
+        "code": 415,
+        "reason": "The CDN server doesn't understand the supplied content type."
+      }, {
+        "code": 413,
+        "reason": "Content items must be under 4MB."
+      }]
+    }]
+  }, {
+    "path": "/usages",
+    "description": "",
+    "operations": [{
+      "httpMethod": "GET",
+      "nickname": "getStats",
+      "responseClass": "UseageStats"
+    }]
+  }, {
+    "path": "/usages/{bucketName}",
+    "description": "",
+    "operations": [{
+      "httpMethod": "GET",
+      "nickname": "getBucketUsage",
+      "responseClass": "BucketUsage",
+      "parameters": [{
+        "paramType": "path",
+        "name": "bucketName",
+        "dataType": "string"
+      }]
+    }]
+  }],
+  "models": {
+    "AccessControlRule": {
+      "properties": {
+        "grantee": {
+          "type": "string",
+          "description": "The owner name for which is having the permissions set"
+        },
+        "permission": {
+          "type": "LIST",
+          "description": "The permission which is provided to the grantee",
+          "values": [
+            "FULL_CONTROL",
+            "WRITE",
+            "READ"
+          ]
+        }
+      }
+    },
+    "Bucket": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "A name for the bucket used to identify it to a user",
+          "pattern": "^[A-z][A-z0-9_\\-]+$"
+        },
+        "owner": {
+          "type": "Owner",
+          "description": "The owner of the bucket"
+        },
+        "creationDate": {
+          "type": "Date",
+          "description": "The Date the bucket was created"
+        },
+        "contents": {
+          "type": "ContentSummary",
+          "description": "Unordered list of Content objects in the bucket"
+        },
+        "acl": {
+          "type": "Set",
+          "description": "",
+          "items": {
+            "$ref": "AccessControlRule"
+          }
+        }
+      },
+      "required": ["name", "owner"]
+    },
+    "EditBucket": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "A name for the bucket used to identify it to a user",
+          "pattern": "^[A-z][A-z0-9_\\-]+$"
+        },
+        "owner": {
+          "type": "String",
+          "description": "The owner of the bucket"
+        },
+        "acl": {
+          "type": "Set",
+          "description": "The Access Control list for the Bucket.",
+          "items": {
+            "$ref": "AccessControlRule"
+          }
+        }
+      }
+    },
+    "BucketSummary": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "A name for the bucket used to identify it to a user",
+          "pattern": "^[A-z][A-z0-9_\\-]+$"
+        },
+        "owner": {
+          "type": "Owner",
+          "description": "The owner of the bucket"
+        },
+        "creationDate": {
+          "type": "Date",
+          "description": "The Date the bucket was created"
+        },
+        "ContentCount": {
+          "type": "int",
+          "description": "The number of content items in the bucket."
+        },
+        "ContentSize": {
+          "type": "int",
+          "description": "The number of bytes in the bucket content."
+        }
+      },
+      "required": ["name", "owner"]
+    },
+    "Content": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "",
+          "pattern": "^[A-z0-9\\-._~\\[\\]!$'*+,;=\/]+$"
+        },
+        "cacheControl": {
+          "type": "string",
+          "description": "The cache control header value sent to the client matching the http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9 spec"
+        },
+        "contentDisposition": {
+          "type": "string",
+          "description": "The http header value sent to the client matching the http://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html#sec19.5.1 spec"
+        },
+        "contentLength": {
+          "type": "int",
+          "description": "Content size in bytes"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "The MIME type describing the content matching the http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.17 spec"
+        },
+        "cacheExpires": {
+          "type": "Date",
+          "description": "If this is set the value represents the date and time the content is no longer cacheable by the client."
+        },
+        "redirectLocation": {
+          "type": "string",
+          "description": "A location to permanently redirect requests to"
+        },
+        "version": {
+          "type": "Version",
+          "description": ""
+        },
+        "md5sum": {
+          "type": "string",
+          "description": "A MD5 computed hash of the content body.",
+          "pattern": "^[0-9a-f]{32}$"
+        },
+        "body": {
+          "type": "string",
+          "description": "the body content. Assummed to be base64 if it's a binary type."
+        }
+      }
+    },
+    "ContentSummary": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "",
+          "pattern": "^[A-z0-9\\-._~\\[\\]!$'*+,;=\/]+$"
+        },
+        "cacheControl": {
+          "type": "string",
+          "description": "The cache control header value sent to the client matching the http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9 spec"
+        },
+        "contentDisposition": {
+          "type": "string",
+          "description": "The http header value sent to the client matching the http://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html#sec19.5.1 spec"
+        },
+        "contentLength": {
+          "type": "int",
+          "description": "Content size in bytes"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "The MIME type describing the content matching the http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.17 spec"
+        },
+        "cacheExpires": {
+          "type": "Date",
+          "description": "If this is set the value represents the date and time the content is no longer cacheable by the client."
+        },
+        "redirectLocation": {
+          "type": "string",
+          "description": "A location to permanently redirect requests to"
+        },
+        "version": {
+          "type": "Version",
+          "description": ""
+        }
+      }
+    },
+    "Owner": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The unique name of the Owner",
+          "pattern": "^[A-z][A-z0-9_\\-]+$"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The name to display for the Owner"
+        }
+      }
+    },
+    "Version": {
+      "properties": {
+        "major": {
+          "type": "int",
+          "description": ""
+        },
+        "minor": {
+          "type": "int",
+          "description": ""
+        },
+        "patch": {
+          "type": "int",
+          "description": ""
+        }
+      }
+    },
+    "Buckets": {
+      "properties": {
+        "items": {
+          "type": "List",
+          "items": {
+            "$ref": "BucketSummary"
+          }
+        }
+      }
+    },
+    "Owners": {
+      "properties": {
+        "items": {
+          "type": "List",
+          "items": {
+            "$ref": "Owner"
+          }
+        }
+      }
+    },
+    "Contents": {
+      "properties": {
+        "items": {
+          "type": "List",
+          "items": {
+            "$ref": "ContentSummary"
+          }
+        }
+      }
+    },
+    "BucketUsage": {
+      "properties": {
+        "bucketName": {
+          "type": "string",
+          "description": "Name of Bucket"
+        },
+        "contentServed": {
+          "type": "int",
+          "description": "content served in KB"
+        }
+      }
+    },
+    "UseageStats": {
+      "properties": {
+        "items": {
+          "type": "List",
+          "items": {
+            "$ref": "BucketUsage"
+          }
+        }
+      }
+    }
+  }
+}

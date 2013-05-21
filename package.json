@@ -1,0 +1,13 @@
+{
+  "name": "swagger-mock-server",
+  "description": "Creates a REST server that provides a mock implementation of API defined by a swagger json spec",
+  "version": "0.0.1",
+  "private": false,
+  "dependencies": {
+    "express": "3.x",
+    "nunjucks": "*",
+    "underscore": "~1.4.4",
+    "swagger-node-express": "~1.2.3",
+    "nodejscheck": "~0.1.7"
+  }
+}

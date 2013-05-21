@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<h2>API</h2>
+
+<script type="text/javascript">
+    $(function () {
+        window.swaggerUi = new SwaggerUi({
+            discoveryUrl:"http://localhost:4000/api/swagger.json",
+            apiKey:"special-key",
+            dom_id:"swagger-ui-container",
+            supportHeaderParams: false,
+            supportedSubmitMethods: ['get', 'post', 'put', 'delete'],
+            onComplete: function(swaggerApi, swaggerUi){
+                if(console) {
+                    console.log("Loaded SwaggerUI")
+                    console.log(swaggerApi);
+                    console.log(swaggerUi);
+                }
+                $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
+            },
+            onFailure: function(data) {
+                if(console) {
+                    console.log("Unable to Load SwaggerUI");
+                    console.log(data);
+                }
+            },
+            docExpansion: "none"
+        });
+
+        window.swaggerUi.load();
+    });
+
+</script>
+
+
+
+<div id="message-bar" class="swagger-ui-wrap">
+    &nbsp;
+</div>
+
+<div id="swagger-ui-container" class="swagger-ui-wrap">
+
+{% endblock %}
